@@ -120,6 +120,11 @@ Default: undef
 Type: string
 Default: undef
 
+`ensure`
+Set to `absent` to disable and remove packages.
+Type: string
+Default: present
+
 ## Limitations
 
 Tested on:
