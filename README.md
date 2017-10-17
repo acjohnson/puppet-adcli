@@ -40,6 +40,12 @@ Defines the Active Directory domain to join
 Type: string
 Default: undef
 
+`ad_domain_controller`
+Connect to a specific domain controller. If not specified then an appropriate domain controller is automatically discovered.
+Type: string
+Required: false
+Default: undef
+
 `ad_join_username`
 Defines the Active Directory username to use during domain join operations.
 Type: string

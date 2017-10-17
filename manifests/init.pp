@@ -9,6 +9,12 @@
 #   Required: true
 #   Default: undef
 #
+# [*ad_domain_controller*]
+#   Connect to a specific domain controller. If not specified then an
+#   appropriate domain controller is automatically discovered.
+#   Required: false
+#   Default: undef
+#
 # [*ad_join_username*]
 #   Username to use during AD join operation.
 #   Required: true
@@ -43,12 +49,14 @@
 #
 class adcli (
   $ad_domain               = $adcli::params::ad_domain,
+  $ad_domain_controller    = $adcli::params::ad_domain_controller,
   $ad_join_username        = $adcli::params::ad_join_username,
   $ad_join_password        = $adcli::params::ad_join_password,
   $ad_join_ou              = $adcli::params::ad_join_ou,
 ) inherits adcli::params {
 
   validate_legacy(String, 'validate_string', $ad_domain)
+  validate_legacy(String, 'validate_string', $ad_domain_controller)
   validate_legacy(String, 'validate_string', $ad_join_username)
   validate_legacy(String, 'validate_string', $ad_join_password)
   validate_legacy(String, 'validate_string', $ad_join_ou)

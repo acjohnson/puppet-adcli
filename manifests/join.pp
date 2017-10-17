@@ -5,10 +5,11 @@
 # See README.md for more details
 #
 class adcli::join (
-  $ad_domain        = $adcli::ad_domain,
-  $ad_join_username = $adcli::ad_join_username,
-  $ad_join_password = $adcli::ad_join_password,
-  $ad_join_ou       = $adcli::ad_join_ou
+  $ad_domain            = $adcli::ad_domain,
+  $ad_domain_controller = $adcli::ad_domain_controller,
+  $ad_join_username     = $adcli::ad_join_username,
+  $ad_join_password     = $adcli::ad_join_password,
+  $ad_join_ou           = $adcli::ad_join_ou,
 ) {
   if $ad_domain == undef {
     notify {'For Active Directory join to work you must specify the ad_domain parameter.':}
@@ -24,7 +25,7 @@ class adcli::join (
   }
   else {
     exec {'adcli_join':
-      command   => "/bin/echo -n \'${ad_join_password}\' | /usr/sbin/adcli join --login-user=\'${ad_join_username}\' --domain=\'${ad_domain}\' --domain-ou=\'${ad_join_ou}\' --stdin-password --verbose",
+      command   => "/bin/echo -n \'${ad_join_password}\' | /usr/sbin/adcli join --domain-controller=\'${ad_domain_controller}\' --login-user=\'${ad_join_username}\' --domain=\'${ad_domain}\' --domain-ou=\'${ad_join_ou}\' --stdin-password --verbose",
       logoutput => true,
       creates   => '/etc/krb5.keytab',
     }
