@@ -24,6 +24,11 @@
 #   Required: true
 #   Default: undef
 #
+# [*ensure*]
+#   Set to "absent" to disable and remove packages.
+#   Required: false
+#   Default: 'present'
+#
 # === Examples
 #
 # class {'::adcli':
@@ -52,6 +57,10 @@ class adcli (
   $ad_join_os                = $adcli::params::ad_join_os,
   $ad_join_os_version        = $adcli::params::ad_join_os_version,
   $ad_join_os_service_pack   = $adcli::params::ad_join_os_service_pack,
+  Enum[
+    'present',
+    'absent'
+  ] $ensure                  = $adcli::params::ensure,
 ) inherits adcli::params {
   validate_legacy(String, 'validate_string', $ad_domain)
   validate_legacy(String, 'validate_string', $ad_join_username)
@@ -63,9 +72,19 @@ class adcli (
   validate_legacy(String, 'validate_string', $ad_join_os_version)
   validate_legacy(String, 'validate_string', $ad_join_os_service_pack)
 
-  anchor { 'adcli::begin': }
-  -> class { '::adcli::install': }
-  -> class { '::adcli::join': }
-  -> anchor { 'adcli::end': }
-
+  case $ensure {
+    'present': {
+      anchor { 'adcli::begin': }
+      -> class { 'adcli::install':
+        ensure => $ensure,
+      }
+      -> class { 'adcli::join': }
+      -> anchor { 'adcli::end': }
+    }
+    default: {
+      class { 'adcli::install':
+        ensure => $ensure,
+      }
+    }
+  }
 }
